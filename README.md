@@ -17,7 +17,7 @@ To set up NanoScript locally, follow these steps:
 1. Open your terminal application.
 2. Clone the repository directly using the command below:
    ```bash
-   git clone https://github.com/Hfs2024/NanoScript/
+   git clone https://github.com/SysSphere/NanoScript/
    ```
 3. Navigate into the project folder:
    ```bash
