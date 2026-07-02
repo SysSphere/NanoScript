@@ -1,22 +1,27 @@
 NS.getGhostState = () => {
     const currentSaves = JSON.parse(localStorage.getItem("ns-current-saves")) || [];
     currentSaves.forEach(save => {
-        document.querySelector(save.selector).value = save.value;
-    })
+        console.log(save);
+        if (document.querySelector(save.selector)) document.querySelector(save.selector)[save.type] = save.value;
+    });
+
+    return currentSaves;
 }
 
-NS.ghostState = (selector) => {
+NS.ghostState = (selector, type = "value") => {
     if (!selector) return console.error("You must provide a selector.");
     const element = document.querySelector(selector);
+    type = type === "text" ? "textContent" : type === "html" ? "innerHTML" : "value";
 
     element.addEventListener("input", function () {
         const currentSaves = JSON.parse(localStorage.getItem("ns-current-saves")) || [];
         const alreadyExists = currentSaves.find(save => save.selector === selector);
 
-        if (alreadyExists) currentSaves[currentSaves.indexOf(alreadyExists)].value = element.value;
+        if (alreadyExists) currentSaves[currentSaves.indexOf(alreadyExists)].value = element[type];
         else currentSaves.push({
             selector: selector,
-            value: element.value
+            type: type,
+            value: element[type]
         });
 
         localStorage.setItem("ns-current-saves", JSON.stringify(currentSaves));
@@ -28,7 +33,7 @@ NS.clearGhostState = (selector, onEnd) => {
 
     let currentSaves = JSON.parse(localStorage.getItem("ns-current-saves")) || [];
     currentSaves = currentSaves.filter(save => save.selector !== selector);
-  
+
     localStorage.setItem("ns-current-saves", JSON.stringify(currentSaves));
     if (typeof onEnd === "function") onEnd();
 }
